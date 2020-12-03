@@ -26,15 +26,21 @@ library(fpp2)
 Use the help menu to explore what the series `gold`, `woolyrnq` and `gas` represent. These are available in the `forecast` package.
 
 ```{r, echo=TRUE, cache=TRUE, eval=FALSE}
-help(gold)
+help(gold)  # Daily morning gold prices in US dollars. 1 January 1985 - 31 March 1989.
 # to do
-asd
+help(woolyrnq)  # Quarterly production of woollen yarn in Australia: tonnes. Mar 1965 - Sep 1994.
+help(gas)  # Australian monthly gas production: 1956-1995.
 ```
 
 Use `autoplot` to plot each of these in separate plots.
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
+require(gridExtra)
+plot1 <- autoplot(gold)
+plot2 <- autoplot(woolyrnq)
+plot3 <- autoplot(gas)
+grid.arrange(plot1, plot2, plot3)
 
 ```
 
@@ -43,7 +49,13 @@ Hint: apply the `frequency()` function.
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
-
+print("1  = Pro Tag 1 Wert. 4 = 4 Quartale pro Jah. 12 = 12 Monate pro Jahr")
+print("gold: ")
+frequency(gold)
+print("woolyrnq: ")
+frequency(woolyrnq)
+print("Gas: ")
+frequency(gas)
 ```
 
 Use `which.max()` to spot the outlier in the `gold` series. 
@@ -51,7 +63,10 @@ Use `which.max()` to spot the outlier in the `gold` series.
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
-
+print("Am Tag: ")
+which.max(gold)
+print("Betrag: ")
+gold[770]
 ```
 
 # Exercise 2 
@@ -69,51 +84,68 @@ We convert the data to time series. The `[,-1]` removes the first column which c
 
 ```{r, echo=TRUE, cache=TRUE}
 mytimeseries <- ts(tute1[, -1], start = 1981, frequency = 4)
+View(mytimeseries)
 ```
 
 Construct time series plots of each of the three series and use 'facets = TRUE' .
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
-
+autoplot(mytimeseries, facets = TRUE)
 ```
 
 Check what happens when you don't include `facets=TRUE`.
 
 ```{r, echo=TRUE, cache=TRUE, dependson="exmyts"}
 # to do
-
+autoplot(mytimeseries)
+print("Facets teil es in unterschiedliche Grids ein")
 ```
 
 # Exercise 3
 
-Import some monthly Australian retail data from the foler data. These represent retail sales in various categories for different Australian states, and are stored in a MS-Excel file.
+Import some monthly Australian retail data from the folder data. These represent retail sales in various categories for different Australian states, and are stored in a MS-Excel file.
 
 You can read the data into R with the following script:
 
 ```{r, echo=TRUE, cache=TRUE}
 retaildata <- readxl::read_excel("data/retail.xlsx", skip = 1)
+View(retaildata)
 ```
 
 The second argument (`skip=1`) is required because the Excel sheet has two header rows.
 
 Select one of the time series as follows (but replace the column name with your own chosen column):
 
+```{r}
+colnames(retaildata)
+```
+
+
 ```{r, echo=TRUE, cache=TRUE}
-myts <- ts(retaildata[, "A3349873A"], frequency = 12, start = c(1982, 4))
+myts <- ts(retaildata[, "A3349432V"], frequency = 12, start = c(1982, 4))
 ```
 
 Explore your chosen retail time series using the following functions: `autoplot`, `ggseasonplot`, `ggsubseriesplot`, `gglagplot`, `ggAcf`
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
-
+autoplot(myts)
+ggseasonplot(myts)
+ggsubseriesplot(myts)
+gglagplot(myts)
+ggAcf(myts)
 ```
 
 **Can you spot any seasonality, cyclicity and trend? What do you learn about the series?**
 
 Your answer:
+- Sales sind steigend (trend nach oben)
+- Sales nehmen zum Ende des Jahres zu (seasonality)
+- Daten haben eine starke Korrelation
+- cyclicity konnten keine gefunden werden
 
+(Weihnachtsshopping)
 
 # Exercise 4
 Create time plots of the following time series: goog, writing, fancy, a10, h02.
@@ -123,7 +155,17 @@ Create time plots of the following time series: goog, writing, fancy, a10, h02.
 
 ```{r, echo=TRUE, message=FALSE, warning=FALSE}
 # to do
+help(goog) # Daily closing stock prices of Google Inc
+help(writing) #Sales of printing and writing paper
+help(fancy) # Monthly sales for a souvenir shop on the wharf at a beach resort town in Queensland, Australia
+help(a10) # Monthly anti-diabetic drug subsidy in Australia from 1991 to 2008.
+help(h02) # Monthly corticosteroid drug subsidy in Australia from 1991 to 2008
 
+autoplot(goog) + labs(x = "Day", y="Price in USD", title= "Daily closing stock prices of Google Inc")
+autoplot(writing)
+autoplot(fancy)
+autoplot(a10)
+autoplot(h02)
 ```
 
 Use the `ggseasonplot` and `ggsubseriesplot` functions to explore the seasonal patterns in the following time series:  `writing`, `fancy`, `a10`, `h02`.
@@ -135,38 +177,45 @@ Use the `ggseasonplot` and `ggsubseriesplot` functions to explore the seasonal p
 ```{r, echo=TRUE}
 # writing
 # to do
-
+ggseasonplot(writing)
+ggsubseriesplot(writing)
 ```
 
 Your answer:
-
+Deutlicher sessionaler Merkmal zu erkennen. Abstieg im August. wahrscheinlich wegen Sommerferien
 
 ```{r, echo=TRUE}
 # fancy
 # to do
-
+ggseasonplot(fancy)
+ggsubseriesplot(fancy)
 ```
 
 Your answer:#
-
+Deutlich mehr Sale im november, Dezember (Weihnachtszeit/Urlaub). Es handelt sich um ein Souvenirshop
 
 ```{r, echo=TRUE}
 # a10
 # to do
-
+ggseasonplot(a10)
+ggsubseriesplot(a10)
+help(a10)
 ```
 
 Your answer:
-
+Deutlicher Anstieg nach der Weihnachtszeit. Evlt. Insulin Spritze.
+Bei 2008 hört die Datenreihe auf.
 
 ```{r, echo=TRUE}
 # h02
 # to do
-
+ggseasonplot(h02)
+ggsubseriesplot(h02)
+help(h02)
 ```
 
 Your answer:
-
+Febraur - Januar stark steigend, dann stark fallend, da
 
 # Exercise 5
 Use the following graphics functions: `autoplot`, `ggseasonplot`, `ggsubseriesplot`, `gglagplot`, `ggAcf` and explore features from the following time series: `hsales`, `usdeaths`, `bricksq`, `sunspotarea`, `gasoline`.
@@ -189,37 +238,76 @@ ggAcf(hsales)
   + No trend
   + ACF only shows seasonality. Cycle length too long to show up here.
 
-```{r, echo=TRUE, cache=TRUE}
-# to do
-
-```
-
-Your answer:
-
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
-
+autoplot(usdeaths)
+ggseasonplot(usdeaths)
+ggsubseriesplot(usdeaths)
+gglagplot(usdeaths)
+ggAcf(usdeaths)
 ```
-
 Your answer:
-
-
-```{r, echo=TRUE, cache=TRUE}
-# to do
-
-```
-
-Your answer:
+ + Seasonality in summer
+ + No Trend
+ + No Cyclicity
+ + ACF only shows seasonality
+ 
+ + Probably more accidental deaths in summer, because people are more outside. (Drive more, swimming and so on)
 
 
 ```{r, echo=TRUE, cache=TRUE}
 # to do
+autoplot(bricksq)
+ggseasonplot(bricksq)
+ggsubseriesplot(bricksq)
+gglagplot(bricksq)
+ggAcf(bricksq)
 
 ```
 
 Your answer:
+  + Small Seasonality (lower in Q1)
+  + Cyclicity from 1975 good shown in ggsubseriesplot
+  
+  + AFC shows seasonality but no cyclicity
+  
+```{r}
+ View(sunspotarea)
+```
 
+  
+```{r, echo=TRUE, cache=TRUE}
+# to do
+autoplot(sunspotarea)
+gglagplot(sunspotarea, lag=70)
+ggAcf(sunspotarea)
+
+```
+
+Your answer:
+  + Cyclicity ~ around every 10 years it drops
+  + no seasonality
+  + no trend
+  
+  + Every few years some physical stuff is happening with the sun/earth
+
+
+
+
+```{r, echo=TRUE, cache=TRUE}
+# to do
+autoplot(gasoline)
+ggseasonplot(gasoline)
+gglagplot(gasoline)
+ggAcf(gasoline, lag.max = 200)
+
+
+```
+
+Your answer:
+  + seasonality every half year 
+  + maybe cyclicity with falling graph after 2009 
 
 # Exercise 6
 
@@ -230,29 +318,40 @@ The `pigs` data shows the monthly total number of pigs slaughtered in Victoria, 
 set.seed(1711)
 y <- ts(rnorm(50))
 autoplot(y) + ggtitle("White noise")
+ggAcf(y)
+
 ```
 
-```{r}
-ggAcf(y)
-```
 
 
 ```{r, echo=TRUE, cache=TRUE}
 # todo
-
+mypigs <- window(pigs, start=1990)
+autoplot(mypigs)
+ggAcf(mypigs)
 ```
 
 Your answer:
+With a higher starting year the ACF plot goes above the blue dotted index line, confirming that the data has no white noise(see lag 1,2,3)
 
+maybe because of lagg 12 there could be some seasonality too, but only a slight one.
 
 # Exercise 7
 
 `dj` contains 292 consecutive trading days of the Dow Jones Index. Use `ddj <- diff(dj)` to compute the daily changes in the index. Plot `ddj` and its ACF. Do the changes in the Dow Jones Index look like white noise?
 
+
+
+
 ```{r}
 # todo
-
+ddj <- diff(dj)
+autoplot(ddj)
+ggAcf(ddj, lag=200)
 ```
 
 Your answer:
+
+The Acf shows that there should be no white noise, because it crossea the blue limit line sometimes. But in the first diagram its kinda hard to see it. 
+Probably if you add more data, the white noise should get filtered out even more.
 
