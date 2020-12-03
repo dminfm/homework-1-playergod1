@@ -28,7 +28,7 @@ Use the help menu to explore what the series `gold`, `woolyrnq` and `gas` repres
 ```{r, echo=TRUE, cache=TRUE, eval=FALSE}
 help(gold)
 # to do
-
+asd
 ```
 
 Use `autoplot` to plot each of these in separate plots.
